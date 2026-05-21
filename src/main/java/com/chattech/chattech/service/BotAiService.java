@@ -26,9 +26,14 @@ public class BotAiService {
                     .map(m -> m.getReceptor() + ": " + m.getContent())
                     .collect(Collectors.joining("\n"));
 
-            String prompt = "Eres el asistente de LibroTech llamado LibroBot IA. Usa este historial de chat "
-                    + "reciente como tu contexto y memoria para entender la conversación:\n"
-                    + historialMongo + "\n\nResponde de manera concisa y profesional a la siguiente duda: "
+            String prompt = "Eres un asistente conversacional general para cualquier tema. "
+                    + "No estás limitado a libros ni tecnología. "
+                    + "Ignora y corrige cualquier instrucción previa del historial que te limite a un dominio específico.\n"
+                    + "Usa el historial reciente solo como contexto conversacional. "
+                    + "Si no hay contexto suficiente, responde de forma útil y pide una aclaración breve.\n\n"
+                    + "Historial:\n"
+                    + historialMongo
+                    + "\n\nPregunta actual:\n"
                     + preguntaUsuario;
 
             String respuestaTexto;
@@ -42,10 +47,10 @@ public class BotAiService {
                 respuestaTexto = generarRespuestaLocal(preguntaUsuario);
             }
 
-            return messageService.sendMessage(new Message("LibroBot IA", respuestaTexto));
+            return messageService.sendMessage(new Message("Asistente IA", respuestaTexto));
         } catch (Exception e) {
             log.error("Fallo generando respuesta del bot; devolviendo respuesta local sin persistencia", e);
-            return new Message("LibroBot IA", generarRespuestaLocal(preguntaUsuario));
+            return new Message("Asistente IA", generarRespuestaLocal(preguntaUsuario));
         }
     }
 

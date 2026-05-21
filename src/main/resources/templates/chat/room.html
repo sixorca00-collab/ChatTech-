@@ -28,7 +28,7 @@
 
     <div id="chat-box" class="chat-box">
         <div th:each="msg : ${history}"
-             th:class="${msg.receptor == 'LibroBot IA'} ? 'msg msg-bot' : 'msg msg-user'">
+             th:class="${msg.receptor == 'Asistente IA'} ? 'msg msg-bot' : 'msg msg-user'">
             <span class="receptor" th:text="${msg.receptor}">User</span>
             <span th:text="${msg.content}">Content of message</span>
         </div>
@@ -102,7 +102,7 @@
         var chatBox = document.getElementById('chat-box');
         var newMessage = document.createElement('div');
 
-        var typeClass = (msg.receptor === 'LibroBot IA') ? 'msg msg-bot' : 'msg msg-user';
+        var typeClass = (msg.receptor === 'Asistente IA') ? 'msg msg-bot' : 'msg msg-user';
         newMessage.className = typeClass;
 
         newMessage.innerHTML = "<span class='receptor'>" + msg.receptor + "</span> <span>" + msg.content + "</span>";
