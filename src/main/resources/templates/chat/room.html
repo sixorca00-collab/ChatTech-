@@ -43,16 +43,36 @@
 
 <script>
     var stompClient = null;
+    var isConnected = false;
+    var reconnectTimer = null;
 
     function connect() {
+        if (reconnectTimer) {
+            clearTimeout(reconnectTimer);
+            reconnectTimer = null;
+        }
         var socket = new SockJS('/chat-websocket');
         stompClient = Stomp.over(socket);
+        stompClient.debug = null;
         stompClient.connect({}, function (frame) {
-            // CORREGIDO: Escuchando en el broker en inglés /topic/messages
+            isConnected = true;
             stompClient.subscribe('/topic/messages', function (response) {
                 showMessage(JSON.parse(response.body));
             });
+        }, function () {
+            isConnected = false;
+            scheduleReconnect();
         });
+    }
+
+    function scheduleReconnect() {
+        if (reconnectTimer) {
+            return;
+        }
+        reconnectTimer = setTimeout(function () {
+            reconnectTimer = null;
+            connect();
+        }, 1500);
     }
 
     function sendMessage() {
@@ -63,13 +83,17 @@
             alert('Please enter both your name and a message.');
             return;
         }
+        if (!isConnected || !stompClient) {
+            connect();
+            alert('Reconectando al chat, intenta enviar de nuevo en 1 segundo.');
+            return;
+        }
 
         var payload = {
             'receptor': receptorInput,
             'content': contentInput
         };
 
-        // CORREGIDO: Enviando al endpoint en inglés /app/send
         stompClient.send("/app/send", {}, JSON.stringify(payload));
         document.getElementById('content').value = '';
     }

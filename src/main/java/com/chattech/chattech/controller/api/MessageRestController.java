@@ -14,10 +14,6 @@ public class MessageRestController {
 
     private final MessageService messageService;
 
-
-    // URL: GET http://localhost:8080/api/messages
-
-    // Inyección manual por constructor
     public MessageRestController(MessageService messageService) {
         this.messageService = messageService;
     }

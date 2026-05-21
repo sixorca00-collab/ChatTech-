@@ -6,10 +6,13 @@ import com.chattech.chattech.service.BotAiService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 
 @Controller
 public class ChatSocketController {
+    private static final Logger log = LoggerFactory.getLogger(ChatSocketController.class);
 
     private final MessageService messageService;
     private final BotAiService botAiService;
@@ -23,7 +26,6 @@ public class ChatSocketController {
         this.messagingTemplate = messagingTemplate;
     }
 
-    // CORREGIDO: De /enviar a /send, y de /tema/mensajes a /topic/messages
     @MessageMapping("/send")
     @SendTo("/topic/messages")
     public Message processUserMessage(Message receivedMessage) {
@@ -33,11 +35,13 @@ public class ChatSocketController {
         Thread.startVirtualThread(() -> {
             try {
                 Message aiResponse = botAiService.generarRespuestaIA(savedMessage.getContent());
-
-                // CORREGIDO: Envío asíncrono al broker en inglés
                 messagingTemplate.convertAndSend("/topic/messages", aiResponse);
             } catch (Exception e) {
-                System.err.println("Error processing AI response asynchronously: " + e.getMessage());
+                log.error("Error processing AI response asynchronously", e);
+                Message errorMessage = new Message();
+                errorMessage.setReceptor("LibroBot IA");
+                errorMessage.setContent("No pude generar respuesta en este momento. Revisa logs del servidor para el detalle.");
+                messagingTemplate.convertAndSend("/topic/messages", errorMessage);
             }
         });
 

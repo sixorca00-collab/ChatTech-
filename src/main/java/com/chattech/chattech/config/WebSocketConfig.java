@@ -12,10 +12,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        // CORREGIDO: Cambiado de /tema a /topic (inglés)
         config.enableSimpleBroker("/topic");
-
-        // Prefijo para enviar datos del cliente al servidor (/app/send)
         config.setApplicationDestinationPrefixes("/app");
     }
 

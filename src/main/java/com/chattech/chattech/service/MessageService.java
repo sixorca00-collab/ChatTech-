@@ -16,18 +16,14 @@ public class MessageService {
         this.repository = repository;
     }
 
-    //Guardar mensajes en la db
     public Message sendMessage(Message message){
         return repository.save(message);
     }
 
-    //Obtener contexto reciente para la IA
     public List<Message> getHistory(){
 
-        //Los ultimos 10 con el metodo en la interfaz
-        List<Message> top = repository.findTop10OrderDaySendDesc();
+        List<Message> top = repository.findTop10ByOrderByDayToSendDesc();
 
-        //Invertimos
         Collections.reverse(top);
         return top;
     }
@@ -35,4 +31,3 @@ public class MessageService {
 
 
 }
-

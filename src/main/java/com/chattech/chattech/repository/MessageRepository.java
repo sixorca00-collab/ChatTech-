@@ -9,6 +9,5 @@ import java.util.List;
 
 @Repository
 public interface MessageRepository extends MongoRepository<Message, String> {
-    //Custom query para los ultimos 10 mensajes ordenador por fecha.
-    List<Message> findTop10OrderDaySendDesc();
+    List<Message> findTop10ByOrderByDayToSendDesc();
 }

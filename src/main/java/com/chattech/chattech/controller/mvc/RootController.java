@@ -8,7 +8,6 @@ public class RootController {
 
     @GetMapping("/")
     public String redirectToChat() {
-        // Redirección HTTP 302 explícita y correcta hacia tu endpoint real
         return "redirect:/ui/chat";
     }
 }

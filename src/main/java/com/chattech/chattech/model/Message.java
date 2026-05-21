@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 
 
-@Document(collation = "messages")
+@Document(collection = "messages")
 public class Message {
     @Id
     private String id;
@@ -15,7 +15,6 @@ public class Message {
     private String content;
     private LocalDateTime dayToSend;
 
-    //Constructor vacio, necesario para Spring y Mongo
     public Message(){}
 
     public Message(String receptor, String content){
@@ -23,7 +22,6 @@ public class Message {
         this.content = content;
         this.dayToSend = LocalDateTime.now();
     }
-//================GETERS=============================
     public String getId() {
         return id;
     }
@@ -39,8 +37,6 @@ public class Message {
     public LocalDateTime getDayToSend() {
         return dayToSend;
     }
-    //===================SETERS==================
-
     public void setId(String id) {
         this.id = id;
     }
